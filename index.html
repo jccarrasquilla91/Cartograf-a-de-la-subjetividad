@@ -372,6 +372,7 @@
 
   </div>
 
+<!-- Asegúrate de tener este elemento justo antes del script -->
   <audio id="audio-player" preload="auto"></audio>
 
   <script>
@@ -455,6 +456,44 @@
     const descEl = document.getElementById("info-desc");
     const tagEl = document.getElementById("info-tag");
     const audioPlayer = document.getElementById("audio-player");
+    let audioUnlocked = false;
+
+    // Desbloquear permisos de audio con el primer clic en la página
+    document.addEventListener("click", () => {
+      if (!audioUnlocked) {
+        audioPlayer.play().then(() => {
+          audioPlayer.pause();
+          audioPlayer.currentTime = 0;
+          audioUnlocked = true;
+        }).catch(() => {
+          audioUnlocked = true;
+        });
+      }
+    }, { once: true });
+
+    function playRouteAudio(item, routeElement) {
+      if (item) {
+        titleEl.textContent = item.title;
+        descEl.textContent = item.desc;
+        tagEl.className = `tag ${item.tag}`;
+        tagEl.textContent = item.tagName;
+
+        routeElement.classList.add("playing-sound");
+
+        if (item.audio) {
+          audioPlayer.src = item.audio;
+          audioPlayer.currentTime = 0;
+          audioPlayer.play().catch((err) => {
+            console.warn("Se requiere un clic en la página para habilitar el sonido:", err);
+          });
+        }
+      }
+    }
+
+    function stopRouteAudio(routeElement) {
+      routeElement.classList.remove("playing-sound");
+      audioPlayer.pause();
+    }
 
     // Interacción Nodos
     document.querySelectorAll(".node-interactive").forEach(node => {
@@ -469,29 +508,18 @@
       });
     });
 
-    // Interacción Rutas y Sonido
+    // Interacción Rutas (Soporta Hover y Clic)
     document.querySelectorAll(".route").forEach(route => {
       route.addEventListener("mouseenter", () => {
-        const item = data[route.id];
-        if (item) {
-          titleEl.textContent = item.title;
-          descEl.textContent = item.desc;
-          tagEl.className = `tag ${item.tag}`;
-          tagEl.textContent = item.tagName;
-
-          route.classList.add("playing-sound");
-
-          if (item.audio) {
-            audioPlayer.src = item.audio;
-            audioPlayer.currentTime = 0;
-            audioPlayer.play().catch(() => {});
-          }
-        }
+        playRouteAudio(data[route.id], route);
       });
 
       route.addEventListener("mouseleave", () => {
-        route.classList.remove("playing-sound");
-        audioPlayer.pause();
+        stopRouteAudio(route);
+      });
+
+      route.addEventListener("click", () => {
+        playRouteAudio(data[route.id], route);
       });
     });
 
