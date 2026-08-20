@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cartografía Emocional y Paisaje Sonoro</title>
+  <style>
+    :root {
+      --bg-color: #f4f6f8;
+      --text-color: #2c3e50;
+      --accent-work: #d81b60;
+      --accent-school: #3949ab;
+      --accent-park: #2e7d32;
+    }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg-color);
+      color: var(--text-color);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+    .controls {
+      margin-bottom: 15px;
+      display: flex;
+      gap: 10px;
+    }
+    button {
+      padding: 8px 16px;
+      border: 1px solid #ccc;
+      border-radius: 20px;
+      background: #fff;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+    button.active {
+      background: #2c3e50;
+      color: #fff;
+    }
+    #map-container {
+      position: relative;
+      width: 900px;
+      height: 600px;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+    /* Estilos de elementos interactivos */
+    .node {
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+    .node:hover {
+      transform: scale(1.15);
+      transform-origin: center;
+    }
+    .route {
+      fill: none;
+      stroke-width: 6;
+      cursor: pointer;
+      transition: stroke-width 0.2s ease, filter 0.2s ease;
+    }
+    .route:hover {
+      stroke-width: 10;
+      filter: drop-shadow(0 0 6px rgba(0,0,0,0.3));
+    }
+    .route-return {
+      stroke-dasharray: 8, 8;
+    }
+    /* Animación de ondas sonoras */
+    @keyframes pulse-wave {
+      0% { stroke-width: 6; opacity: 1; }
+      50% { stroke-width: 16; opacity: 0.5; }
+      100% { stroke-width: 6; opacity: 1; }
+    }
+    .playing-sound {
+      animation: pulse-wave 1s infinite ease-in-out;
+    }
+    /* Tarjeta de información / Tooltip */
+    #info-card {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(4px);
+      padding: 15px 20px;
+      border-radius: 8px;
+      border-left: 5px solid #2c3e50;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+    }
+    #info-card h4 { margin: 0 0 5px 0; font-size: 16px; }
+    #info-card p { margin: 0; font-size: 14px; color: #555; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h2>Cartografía Emocional y Paisaje Sonoro</h2>
+    <p>Pasa el cursor sobre los nodos para leer la experiencia o sobre las rutas para escuchar el paisaje sonoro.</p>
+  </header>
+
+  <div class="controls">
+    <button id="btn-corema" class="active" onclick="toggleLayer('corema')">Vista Esquema / Corema</button>
+    <button id="btn-base" onclick="toggleLayer('base')">Vista Mapa Base</button>
+  </div>
+
+  <div id="map-container">
+    <svg viewBox="0 0 900 600" id="svg-map">
+      <!-- Capa de Fondo (Mapa Base / Trama Urbana simplificada) -->
+      <g id="layer-base" class="hidden">
+        <rect width="900" height="600" fill="#e8ecef"/>
+        <path d="M 0 320 Q 300 280 400 150 T 600 200 T 900 180" fill="none" stroke="#b0bec5" stroke-width="40" opacity="0.6"/>
+        <text x="450" y="220" fill="#78909c" font-size="14" font-style="italic">Cuerpo de Agua / Río</text>
+      </g>
+
+      <!-- Rutas (Líneas interactivas con sonido) -->
+      <g id="layer-routes">
+        <!-- Ruta Trabajo -->
+        <path id="route-work" class="route" stroke="#d81b60" d="M 120 300 Q 300 250 550 280" />
+        <path id="route-work-ret" class="route route-return" stroke="#d81b60" d="M 550 280 Q 400 100 120 300" />
+        
+        <!-- Ruta Estudiante -->
+        <path id="route-school" class="route" stroke="#3949ab" d="M 120 300 C 350 270 500 320 780 340" />
+        <path id="route-school-ret" class="route route-return" stroke="#3949ab" d="M 780 340 C 650 150 350 100 120 300" />
+
+        <!-- Ruta Parque -->
+        <path id="route-park" class="route" stroke="#2e7d32" d="M 120 300 Q 300 350 320 450 T 600 550" />
+        <path id="route-park-ret" class="route route-return" stroke="#2e7d32" d="M 600 550 C 700 450 720 350 120 300" />
+      </g>
+
+      <!-- Nodos / Formas interactivas -->
+      <g id="layer-nodes">
+        <!-- Casa (Hogar) -->
+        <g id="node-house" class="node" transform="translate(120,300)">
+          <polygon points="0,-25 20,-5 20,20 -20,20 -20,-5" fill="#ffffff" stroke="#2c3e50" stroke-width="3"/>
+          <text x="0" y="38" text-anchor="middle" font-size="12" font-weight="bold">La Casa</text>
+        </g>
+
+        <!-- Trabajo -->
+        <g id="node-work" class="node" transform="translate(550,280)">
+          <polygon points="0,-22 20,15 -20,15" fill="#d81b60" stroke="#ad1457" stroke-width="2"/>
+          <text x="0" y="32" text-anchor="middle" font-size="12" font-weight="bold">Trabajo</text>
+        </g>
+
+        <!-- Recogida Estudiante -->
+        <g id="node-student" class="node" transform="translate(780,340)">
+          <circle r="20" fill="#3949ab" stroke="#1a237e" stroke-width="2"/>
+          <text x="0" y="36" text-anchor="middle" font-size="12" font-weight="bold">Estudiante</text>
+        </g>
+
+        <!-- Parque y Lago -->
+        <g id="node-park" class="node" transform="translate(600,550)">
+          <polygon points="0,-22 7,-8 22,-8 11,3 15,18 0,9 -15,18 -11,3 -22,-8 -7,-8" fill="#2e7d32" stroke="#1b5e20" stroke-width="2"/>
+          <text x="0" y="32" text-anchor="middle" font-size="12" font-weight="bold">Parque y Lago</text>
+        </g>
+      </g>
+    </svg>
+
+    <!-- Tarjeta Dinámica de Información -->
+    <div id="info-card">
+      <h4 id="info-title">Punto de Partida</h4>
+      <p id="info-desc">Selecciona o pasa el cursor sobre un nodo o trayecto para ver las emociones y escuchar el paisaje sonoro.</p>
+    </div>
+  </div>
+
+  <!-- Contenedor de Audio HTML5 -->
+  <audio id="audio-player" preload="auto"></audio>
+
+  <script>
+    const data = {
+      "node-house": {
+        title: "La Casa (Refugio y Origen)",
+        desc: "Punto de partida de todas las derivas cotidianas. Espacio de seguridad, calidez y retorno al reposo."
+      },
+      "node-work": {
+        title: "Lugar de Trabajo",
+        desc: "Nodo de concentración, deber y aceleración del ritmo diario antes del retorno."
+      },
+      "node-student": {
+        title: "Punto de Encuentro: Recogida del Estudiante",
+        desc: "Espacio de espera y encuentro vespertino. Marca la transición hacia un paso más conversado y atento."
+      },
+      "node-park": {
+        title: "El Parque y el Lago (Topofilia Pura)",
+        desc: "Refugio verde y pausa sensorial. El horizonte visual se expande junto al agua y la vegetación."
+      },
+      "route-work": {
+        title: "Ruta al Trabajo (Ida) — Paisaje Sonoro",
+        desc: "Topofobia matutina: Ruido de tráfico motorizado, aceleraciones y cruce apresurado del canal.",
+        audio: "https://actions.google.com/sounds/v1/ambiences/traffic_heavy.ogg"
+      },
+      "route-school": {
+        title: "Ruta de la Tarde — Tránsito Urbano",
+        desc: "Topofobia moderada: Murmullo constante de la avenida comercial y bocinas durante la hora pico.",
+        audio: "https://actions.google.com/sounds/v1/ambiences/city_street_day.ogg"
+      },
+      "route-park": {
+        title: "Ruta al Parque y Lago — Topofilia Acústica",
+        desc: "Bienestar auditivo: Viento sobre los árboles, graznido de aves acuáticas y rumor suave del agua.",
+        audio: "https://actions.google.com/sounds/v1/ambiences/outdoor_park_birds.ogg"
+      }
+    };
+
+    const titleEl = document.getElementById("info-title");
+    const descEl = document.getElementById("info-desc");
+    const audioPlayer = document.getElementById("audio-player");
+    let currentActiveRoute = null;
+
+    // Asignar interacción a los nodos
+    document.querySelectorAll(".node").forEach(node => {
+      node.addEventListener("mouseenter", () => {
+        const info = data[node.id];
+        if (info) {
+          titleEl.textContent = info.title;
+          descEl.textContent = info.desc;
+        }
+      });
+    });
+
+    // Asignar interacción, ondas y sonido a las rutas
+    document.querySelectorAll(".route").forEach(route => {
+      route.addEventListener("mouseenter", () => {
+        const info = data[route.id] || data["route-work"];
+        titleEl.textContent = info.title;
+        descEl.textContent = info.desc;
+
+        // Efecto visual de ondas
+        route.classList.add("playing-sound");
+        currentActiveRoute = route;
+
+        // Reproducción de audio
+        if (info.audio) {
+          audioPlayer.src = info.audio;
+          audioPlayer.currentTime = 0;
+          audioPlayer.play().catch(() => {
+            // Manejo de restricciones de autoplay del navegador
+            console.log("Interacción previa requerida para autoplay");
+          });
+        }
+      });
+
+      route.addEventListener("mouseleave", () => {
+        route.classList.remove("playing-sound");
+        audioPlayer.pause();
+      });
+    });
+
+    // Conmutador de capas
+    function toggleLayer(layer) {
+      const baseLayer = document.getElementById("layer-base");
+      const btnBase = document.getElementById("btn-base");
+      const btnCorema = document.getElementById("btn-corema");
+
+      if (layer === 'base') {
+        baseLayer.classList.remove("hidden");
+        btnBase.classList.add("active");
+        btnCorema.classList.remove("active");
+      } else {
+        baseLayer.classList.add("hidden");
+        btnCorema.classList.add("active");
+        btnBase.classList.remove("active");
+      }
+    }
+  </script>
+</body>
+</html>
