@@ -94,6 +94,27 @@
       height: 100%;
     }
 
+    /* Contenedor exclusivo para la Ilustración del Mapa Base */
+    #base-image-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+
+    #base-image-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
     #sidebar {
       width: 350px;
       display: flex;
@@ -298,7 +319,7 @@
       fill: #1b1f23;
     }
 
-    .hidden { display: none; }
+    .hidden { display: none !important; }
   </style>
 </head>
 <body>
@@ -316,6 +337,13 @@
   <div class="workspace">
     
     <div id="map-container">
+      
+      <!-- VISTA 1: ILUSTRACIÓN MAPA BASE (LIMPIA, SIN NADA ENCIMA) -->
+      <div id="base-image-container" class="hidden">
+        <img src="mapa_base.jpg" alt="Mapa base ilustrado" onerror="this.src='https://images.unsplash.com/photo-1524661135-423995f22d0b?w=1200&auto=format&fit=crop&q=80';">
+      </div>
+
+      <!-- VISTA 2: COREMA INTERACTIVO COMPLETO -->
       <svg viewBox="0 0 840 660" id="svg-map">
         <defs>
           <pattern id="diagonal-hatch" width="10" height="10" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
@@ -334,7 +362,6 @@
           <path class="blob-urban" d="M 80,180 C 140,110 260,100 370,120 C 460,135 520,200 500,290 C 460,340 320,340 210,320 C 110,300 50,240 80,180 Z" />
           <path class="blob-warm" d="M 280,140 C 370,110 490,130 520,190 C 550,250 510,320 430,315 C 360,300 270,270 260,220 C 250,170 230,160 280,140 Z" />
           
-          <!-- Hachurado de saturación -->
           <path class="hatch-pattern" d="M 290,145 C 380,125 475,140 495,195 C 515,245 480,300 410,295 C 340,285 280,255 275,210 Z" />
 
           <!-- Zona del Parque y Lago Sur -->
@@ -355,11 +382,11 @@
 
         <!-- CAPA 2: RUTAS CONVERGENTES -->
         <g id="layer-routes">
-          <!-- 1. Trabajo (Pasa cerca del Parque Alfonso López) -->
+          <!-- 1. Trabajo -->
           <path id="route-work" class="route route-work-main" stroke="var(--c-work)" d="M 100,300 L 260,300 L 370,285 L 450,295 L 530,240" />
           <path id="route-work-ret" class="route route-return-thin" stroke="var(--c-work)" d="M 530,240 L 440,160 L 220,160 L 100,300" />
 
-          <!-- 2. Estudiante (Bordea el Parque Alfonso López hacia el este) -->
+          <!-- 2. Estudiante -->
           <path id="route-school" class="route route-school-main" stroke="var(--c-school)" d="M 100,300 L 240,315 L 380,315 L 490,335 L 700,380" />
           <path id="route-school-ret" class="route route-school-double-1" d="M 700,378 L 620,178 L 300,138 L 100,298" />
           <path id="route-school-ret-2" class="route route-school-double-2" d="M 700,384 L 624,184 L 302,144 L 100,304" />
@@ -379,10 +406,9 @@
             <text class="map-label" x="0" y="36" text-anchor="middle">La Casa</text>
           </g>
 
-          <!-- NUEVO HITO: PARQUE ALFONSO LÓPEZ (PARQUE DE LA IGLESIA) -->
+          <!-- PARQUE ALFONSO LÓPEZ -->
           <g id="node-plaza" class="node-interactive" transform="translate(470,320)">
             <circle r="22" fill="#fff8e1" stroke="var(--c-plaza)" stroke-width="2.5"/>
-            <!-- Ícono central de iglesia/cúpula de plaza -->
             <path d="M 0,-12 L 0,-6 M -3,-9 L 3,-9" stroke="var(--c-plaza)" stroke-width="1.8" stroke-linecap="round"/>
             <polygon points="-8,4 0,-4 8,4" fill="none" stroke="var(--c-plaza)" stroke-width="1.8"/>
             <rect x="-7" y="4" width="14" height="6" fill="var(--c-plaza)"/>
@@ -415,7 +441,6 @@
 
         <!-- CAPA 4: LLAMADOS TEXTUALES -->
         <g id="layer-callouts">
-          <!-- Llamado Plaza/Iglesia -->
           <text class="map-callout" x="460" y="380">
             <tspan x="460" dy="0" font-weight="bold" fill="#b78103">Hito de convergencia</tspan>
             <tspan x="460" dy="12">Parque de la Iglesia (Paso obligado)</tspan>
@@ -649,17 +674,22 @@
       route.addEventListener("click", () => playRouteAudio(data[route.id], route));
     });
 
+    // Control de Pestañas: Alternar entre Mapa Base Limpio y Corema
     function toggleLayer(view) {
-      const zones = document.getElementById("layer-zones");
+      const baseImgContainer = document.getElementById("base-image-container");
+      const svgMap = document.getElementById("svg-map");
       const btnCorema = document.getElementById("btn-corema");
       const btnBase = document.getElementById("btn-base");
 
       if (view === 'base') {
-        zones.classList.add("hidden");
+        baseImgContainer.classList.remove("hidden");
+        svgMap.classList.add("hidden");
         btnBase.classList.add("active");
         btnCorema.classList.remove("active");
+        audioPlayer.pause();
       } else {
-        zones.classList.remove("hidden");
+        baseImgContainer.classList.add("hidden");
+        svgMap.classList.remove("hidden");
         btnCorema.classList.add("active");
         btnBase.classList.remove("active");
       }
