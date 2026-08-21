@@ -6,15 +6,14 @@
   <title>Corema Socioespacial y Paisaje Sonoro</title>
   <style>
     :root {
-      --bg: #f2f4f0;
-      --paper: #fafbf9;
-      --text: #1b1f23;
-      --muted: #57606a;
-      --c-work: #c2185b;
-      --c-school: #1565c0;
+      --bg: #f5f6f3;
+      --paper: #ffffff;
+      --text: #212529;
+      --muted: #6c757d;
+      --river: #48c9cf;
+      --c-work: #d81b60;
+      --c-school: #283593;
       --c-park: #1b5e20;
-      --c-water: #b0bec5;
-      --c-zone: #fff59d;
     }
 
     * { box-sizing: border-box; }
@@ -74,18 +73,18 @@
       display: flex;
       flex-direction: row;
       gap: 20px;
-      width: 1160px;
+      width: 1180px;
       max-width: 100%;
     }
 
     #map-container {
       position: relative;
       flex: 1;
-      height: 700px;
+      height: 720px;
       background: var(--paper);
-      border-radius: 8px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-      border: 1px solid #d0d7de;
+      border-radius: 12px;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.05);
+      border: 1px solid #e1e4e8;
       overflow: hidden;
     }
 
@@ -94,7 +93,7 @@
       height: 100%;
     }
 
-    /* Panel Lateral de Información */
+    /* Panel Lateral */
     #sidebar {
       width: 330px;
       display: flex;
@@ -105,15 +104,15 @@
     .info-card {
       background: #ffffff;
       padding: 20px;
-      border-radius: 8px;
-      border: 1px solid #d0d7de;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      border-radius: 10px;
+      border: 1px solid #e1e4e8;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
     }
 
     .info-card h3 {
       margin: 0 0 8px 0;
       font-size: 16px;
-      border-bottom: 2px solid #1b1f23;
+      border-bottom: 2px solid #212529;
       padding-bottom: 6px;
     }
 
@@ -138,35 +137,42 @@
     .tag-topofobia { background: #ffebee; color: #c2185b; }
     .tag-neutro { background: #e3f2fd; color: #0d47a1; }
 
-    /* Fondo y Corema Gráfico */
-    .geo-zone {
-      fill: var(--c-zone);
+    /* Entidades del Corema */
+    .blob-urban {
+      fill: #ffe0b2;
       opacity: 0.55;
     }
 
-    .geo-water {
-      fill: none;
-      stroke: var(--c-water);
-      stroke-width: 24;
-      stroke-linecap: round;
+    .blob-warm {
+      fill: #ffcc80;
+      opacity: 0.65;
     }
 
-    .geo-hatch {
-      fill: url(#diagonal-hatch);
-      stroke: #cfd8dc;
-      stroke-width: 1;
-    }
-
-    .lake-surface {
-      fill: #b2dfdb;
+    .blob-park {
+      fill: #c8e6c9;
       opacity: 0.6;
     }
 
-    .sensory-ring {
+    .hatch-pattern {
+      fill: url(#diagonal-hatch);
+    }
+
+    .river-path {
       fill: none;
-      stroke: #2e7d32;
-      stroke-dasharray: 4, 4;
-      opacity: 0.35;
+      stroke: var(--river);
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .river-body { stroke-width: 22; opacity: 0.85; }
+    .river-edge { stroke-width: 28; opacity: 0.25; }
+    .river-centerline { stroke-width: 1.5; stroke: #ffffff; stroke-dasharray: 4, 4; opacity: 0.8; }
+
+    .sensory-pulse {
+      fill: none;
+      stroke: #81c784;
+      stroke-dasharray: 4, 5;
+      opacity: 0.45;
     }
 
     /* Rutas Vectoriales y Jerarquías */
@@ -178,18 +184,15 @@
       transition: stroke-width 0.2s, filter 0.2s;
     }
 
-    /* Ida: Trazos principales más densos */
     .route-work-main { stroke: var(--c-work); stroke-width: 6; }
     .route-school-main { stroke: var(--c-school); stroke-width: 6; }
     .route-park-main { stroke: var(--c-park); stroke-width: 6; }
 
-    /* Retornos: Más delgados para jerarquía visual */
     .route-return-thin {
       stroke-width: 3.5;
       stroke-dasharray: 6, 6;
     }
 
-    /* Retorno Doble Estudiante (2 personas) */
     .route-school-double-1 {
       stroke: var(--c-school);
       stroke-width: 3;
@@ -202,21 +205,20 @@
     }
 
     .route:hover {
-      filter: drop-shadow(0 0 5px rgba(0,0,0,0.3));
+      filter: drop-shadow(0 0 5px rgba(0,0,0,0.35));
     }
 
-    /* Ondas sonoras activas */
     @keyframes pulse-wave {
       0% { opacity: 1; }
-      50% { opacity: 0.5; stroke-width: 10; }
+      50% { opacity: 0.5; stroke-width: 11; }
       100% { opacity: 1; }
     }
 
     .playing-sound {
-      animation: pulse-wave 0.8s infinite ease-in-out;
+      animation: pulse-wave 0.85s infinite ease-in-out;
     }
 
-    /* Nodos sin movimiento/salto */
+    /* Nodos */
     .node-interactive {
       cursor: pointer;
     }
@@ -224,10 +226,9 @@
       filter: drop-shadow(0 0 6px rgba(0, 0, 0, 0.3));
     }
 
-    /* Tipografías Editoriales */
     .map-callout {
       font-size: 11px;
-      fill: #24292f;
+      fill: #212529;
       pointer-events: none;
     }
 
@@ -235,7 +236,6 @@
       font-size: 12px;
       font-weight: 700;
       fill: #1b1f23;
-      letter-spacing: -0.2px;
     }
 
     .hidden { display: none; }
@@ -256,97 +256,117 @@
   <div class="workspace">
     
     <div id="map-container">
-      <svg viewBox="0 0 800 640" id="svg-map">
+      <svg viewBox="0 0 820 660" id="svg-map">
         <defs>
           <pattern id="diagonal-hatch" width="10" height="10" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
-            <line x1="0" y1="0" x2="0" y2="10" stroke="#b0bec5" stroke-width="1.5" />
+            <line x1="0" y1="0" x2="0" y2="10" stroke="#ffb74d" stroke-width="1.5" />
+          </pattern>
+          <pattern id="dot-grid" width="16" height="16" patternUnits="userSpaceOnUse">
+            <circle cx="2" cy="2" r="1.5" fill="#cfd8dc" />
           </pattern>
         </defs>
 
-        <!-- CAPA 1: ZONAS Y FENÓMENOS PERCEPTUALES -->
+        <!-- CAPA 1: MORFOLOGÍA ORGÁNICA Y RÍO SINUOSO -->
         <g id="layer-zones">
-          <path class="geo-zone" d="M 60,180 C 140,110 280,90 440,120 C 500,140 500,260 420,290 C 300,330 120,320 60,180 Z" />
-          <polygon class="geo-hatch" points="260,135 480,145 450,290 280,280" />
+          <!-- Fondo de Trama Ligera Urbana -->
+          <rect width="820" height="660" fill="url(#dot-grid)" opacity="0.7"/>
 
-          <!-- Eje Hídrico -->
-          <path class="geo-water" d="M 340,30 Q 320,160 300,230 T 260,350 T 210,600" />
-          <text x="310" y="70" fill="#78909c" font-size="11" font-style="italic" transform="rotate(75, 310, 70)">Canal / Eje Hídrico</text>
+          <!-- Manchas Ameboides de Actividad Urbana (Inspiradas en Referentes) -->
+          <path class="blob-urban" d="M 80,180 C 140,110 260,100 370,120 C 460,135 500,210 470,280 C 440,330 320,340 210,320 C 110,300 50,240 80,180 Z" />
+          <path class="blob-warm" d="M 280,140 C 370,110 470,130 500,190 C 530,250 480,310 410,300 C 350,290 270,270 260,220 C 250,170 230,160 280,140 Z" />
+          
+          <!-- Hachurado de saturación laboral / comercial -->
+          <path class="hatch-pattern" d="M 290,145 C 380,125 460,140 480,195 C 500,245 460,295 400,285 C 340,275 280,255 275,210 Z" />
 
-          <!-- Espacio Perceptual del Lago (Desahogo Sensorial) -->
-          <ellipse class="lake-surface" cx="520" cy="525" rx="110" ry="60" />
-          <ellipse class="sensory-ring" cx="520" cy="525" rx="140" ry="80" />
-          <ellipse class="sensory-ring" cx="520" cy="525" rx="170" ry="100" />
-          <path d="M 470,510 Q 520,500 570,510 M 480,530 Q 520,520 560,530" stroke="#00796b" stroke-width="1.5" fill="none" opacity="0.6"/>
+          <!-- Mancha Verde Orgánica del Parque y Lago -->
+          <path class="blob-park" d="M 330,500 C 370,440 500,430 600,480 C 690,520 670,610 570,625 C 470,640 370,620 330,570 C 300,530 300,540 330,500 Z" />
+
+          <!-- Halos concéntricos de desahogo sensorial y dispersión térmica -->
+          <ellipse class="sensory-pulse" cx="510" cy="535" rx="140" ry="75" />
+          <ellipse class="sensory-pulse" cx="510" cy="535" rx="180" ry="95" />
+
+          <!-- EJE HÍDRICO / RÍO SINUOSO (#48c9cf) -->
+          <!-- Ribera exterior suave -->
+          <path class="river-path river-edge" d="M 360,20 C 340,100 270,140 320,230 C 360,300 230,360 270,470 C 300,540 180,590 190,660" />
+          <!-- Cuerpo principal del río -->
+          <path class="river-path river-body" d="M 360,20 C 340,100 270,140 320,230 C 360,300 230,360 270,470 C 300,540 180,590 190,660" />
+          <!-- Línea central de corriente -->
+          <path class="river-path river-centerline" d="M 360,20 C 340,100 270,140 320,230 C 360,300 230,360 270,470 C 300,540 180,590 190,660" />
+
+          <!-- Lago esquemático conectado -->
+          <ellipse cx="510" cy="535" rx="75" ry="38" fill="#48c9cf" opacity="0.8" />
+          <path d="M 470,530 Q 510,515 550,530 M 480,545 Q 510,535 540,545" stroke="#ffffff" stroke-width="2" fill="none" opacity="0.9"/>
+
+          <text x="330" y="80" fill="#00838f" font-size="11" font-weight="600" font-style="italic" transform="rotate(72, 330, 80)">Río / Eje Ambiental (#48c9cf)</text>
         </g>
 
         <!-- CAPA 2: RUTAS CON JERARQUÍAS -->
         <g id="layer-routes">
-          <!-- 1. Trabajo (Magenta) -->
+          <!-- 1. Ruta Trabajo (Magenta) -->
           <path id="route-work" class="route route-work-main" stroke="var(--c-work)" d="M 100,300 L 260,300 L 380,260 L 460,260" />
           <path id="route-work-ret" class="route route-return-thin" stroke="var(--c-work)" d="M 460,260 L 430,160 L 220,160 L 100,300" />
 
-          <!-- 2. Estudiante (Azul - Ida gruesa, Retorno Doble en paralelo) -->
-          <path id="route-school" class="route route-school-main" stroke="var(--c-school)" d="M 100,300 L 240,315 L 430,340 L 660,390" />
-          <path id="route-school-ret" class="route route-school-double-1" d="M 660,388 L 610,178 L 300,138 L 100,298" />
-          <path id="route-school-ret-2" class="route route-school-double-2" d="M 660,394 L 614,184 L 302,144 L 100,304" />
+          <!-- 2. Ruta Estudiante (Azul - Retorno Doble en Paralelo) -->
+          <path id="route-school" class="route route-school-main" stroke="var(--c-school)" d="M 100,300 L 240,315 L 430,340 L 680,390" />
+          <path id="route-school-ret" class="route route-school-double-1" d="M 680,388 L 620,178 L 300,138 L 100,298" />
+          <path id="route-school-ret-2" class="route route-school-double-2" d="M 680,394 L 624,184 L 302,144 L 100,304" />
 
-          <!-- 3. Parque y Lago (Verde) -->
-          <path id="route-park" class="route route-park-main" stroke="var(--c-park)" d="M 100,300 L 220,320 L 240,460 L 480,510" />
-          <path id="route-park-ret" class="route route-return-thin" stroke="var(--c-park)" d="M 520,500 L 580,410 L 380,310 L 100,300" />
+          <!-- 3. Ruta Parque y Lago (Verde) -->
+          <path id="route-park" class="route route-park-main" stroke="var(--c-park)" d="M 100,300 L 220,320 L 240,460 L 470,515" />
+          <path id="route-park-ret" class="route route-return-thin" stroke="var(--c-park)" d="M 520,500 L 590,410 L 380,310 L 100,300" />
         </g>
 
-        <!-- CAPA 3: NODOS REDISEÑADOS -->
+        <!-- CAPA 3: NODOS EDITORIALES ESTABLES -->
         <g id="layer-nodes">
           
-          <!-- HOGAR / CASA (Pictograma sobrio de abrigo) -->
+          <!-- HOGAR / LA CASA -->
           <g id="node-house" class="node-interactive" transform="translate(100,300)">
-            <circle r="22" fill="#ffffff" stroke="#1b1f23" stroke-width="2"/>
-            <path d="M -10,4 L -10,-2 L 0,-10 L 10,-2 L 10,4 Z" fill="#1b1f23"/>
-            <rect x="-3" y="-1" width="6" height="5" fill="#ffffff"/>
+            <circle r="22" fill="#ffffff" stroke="#1b1f23" stroke-width="2.5"/>
+            <path d="M -9,4 L -9,-2 L 0,-9 L 9,-2 L 9,4 Z" fill="#1b1f23"/>
+            <rect x="-2.5" y="-1" width="5" height="5" fill="#ffffff"/>
             <text class="map-label" x="0" y="36" text-anchor="middle">La Casa</text>
           </g>
 
-          <!-- TRABAJO (Nodo Funcional) -->
+          <!-- TRABAJO -->
           <g id="node-work" class="node-interactive" transform="translate(460,260)">
-            <rect x="-16" y="-16" width="32" height="32" rx="4" fill="var(--c-work)" stroke="#ffffff" stroke-width="2"/>
+            <rect x="-16" y="-16" width="32" height="32" rx="6" fill="var(--c-work)" stroke="#ffffff" stroke-width="2"/>
             <circle cx="0" cy="0" r="4" fill="#ffffff"/>
             <text class="map-label" x="0" y="32" text-anchor="middle">Trabajo</text>
           </g>
 
-          <!-- ESTUDIANTE (Nodo de Espera) -->
-          <g id="node-student" class="node-interactive" transform="translate(660,390)">
-            <circle r="18" fill="var(--c-school)" stroke="#ffffff" stroke-width="2.5"/>
+          <!-- ESTUDIANTE -->
+          <g id="node-student" class="node-interactive" transform="translate(680,390)">
+            <circle r="19" fill="var(--c-school)" stroke="#ffffff" stroke-width="2.5"/>
             <circle cx="0" cy="-5" r="3.5" fill="#ffffff"/>
             <path d="M -6,7 C -6,0 6,0 6,7" fill="none" stroke="#ffffff" stroke-width="2"/>
             <text class="map-label" x="0" y="34" text-anchor="middle">Estudiante</text>
           </g>
 
-          <!-- PARQUE Y LAGO (Nodo de Desahogo y Agua) -->
-          <g id="node-park" class="node-interactive" transform="translate(500,520)">
+          <!-- PARQUE Y LAGO -->
+          <g id="node-park" class="node-interactive" transform="translate(510,535)">
             <circle r="24" fill="#1b5e20" stroke="#ffffff" stroke-width="2"/>
             <circle r="18" fill="none" stroke="#a5d6a7" stroke-width="1.5"/>
             <path d="M -8,2 Q 0,-6 8,2" stroke="#ffffff" stroke-width="2" fill="none"/>
-            <text class="map-label" x="0" y="40" text-anchor="middle">Parque & Lago</text>
+            <text class="map-label" x="0" y="42" text-anchor="middle">Parque & Lago</text>
           </g>
         </g>
 
         <!-- CAPA 4: LLAMADOS Y TEXTOS CONCEPTUALES -->
         <g id="layer-callouts">
-          <text class="map-callout" x="480" y="240">
-            <tspan x="480" dy="0" font-weight="bold">Ritmo acelerado</tspan>
-            <tspan x="480" dy="13">Cruce de vía principal</tspan>
+          <text class="map-callout" x="485" y="245">
+            <tspan x="485" dy="0" font-weight="bold">Ritmo acelerado</tspan>
+            <tspan x="485" dy="13">Cruce de vía principal</tspan>
           </text>
 
-          <text class="map-callout" x="620" y="440">
-            <tspan x="620" dy="0" font-weight="bold">Espera y retorno conjunto</tspan>
-            <tspan x="620" dy="13">Caminata de dos personas (trazo doble)</tspan>
+          <text class="map-callout" x="640" y="440">
+            <tspan x="640" dy="0" font-weight="bold">Espera y retorno conjunto</tspan>
+            <tspan x="640" dy="13">Caminata de dos personas (trazo doble)</tspan>
           </text>
 
-          <!-- Texto descriptivo del desahogo sensorial integrado -->
-          <text class="map-callout" x="320" y="585">
-            <tspan x="320" dy="0" font-weight="bold" fill="#1b5e20">Desahogo sensorial</tspan>
-            <tspan x="320" dy="13">Apertura visual · El cuerpo reduce la marcha</tspan>
-            <tspan x="320" dy="13" font-style="italic">Descenso térmico por proximidad al agua</tspan>
+          <text class="map-callout" x="310" y="595">
+            <tspan x="310" dy="0" font-weight="bold" fill="#1b5e20">Desahogo sensorial</tspan>
+            <tspan x="310" dy="13">Apertura visual · El cuerpo reduce la marcha</tspan>
+            <tspan x="310" dy="13" font-style="italic">Descenso térmico por proximidad al agua</tspan>
           </text>
         </g>
       </svg>
@@ -362,17 +382,16 @@
 
       <div class="info-card">
         <h3>Jerarquía de Convenciones</h3>
-        <p style="margin-bottom:6px;"><strong>— Trazo Grueso Continuo:</strong> Rutas de ida (mayor velocidad y carga funcional).</p>
+        <p style="margin-bottom:6px;"><strong>— Trazo Grueso:</strong> Rutas de ida (mayor velocidad y carga funcional).</p>
         <p style="margin-bottom:6px;"><strong>- - Trazo Delgado:</strong> Retorno individual por vías secundarias.</p>
-        <p style="margin-bottom:6px;"><strong>= = Trazo Doble Segmentado:</strong> Retorno de 2 personas (caminata acompasada).</p>
-        <p style="margin-bottom:6px;"><strong>((( ))) Anillos Concéntricos:</strong> Zona de descompresión y desahogo térmico/acústico.</p>
-        <p style="margin-bottom:0;"><strong>Pasa el cursor</strong> sobre las líneas para activar el paisaje sonoro.</p>
+        <p style="margin-bottom:6px;"><strong>= = Trazo Doble:</strong> Retorno acompañado (dos personas acompasadas).</p>
+        <p style="margin-bottom:6px;"><strong>((( ))) Anillos Concéntricos:</strong> Zona de descompresión y desahogo sensorial.</p>
+        <p style="margin-bottom:0;"><strong>Haz clic o pasa el cursor</strong> sobre las líneas para activar el paisaje sonoro.</p>
       </div>
     </div>
 
   </div>
 
-<!-- Asegúrate de tener este elemento justo antes del script -->
   <audio id="audio-player" preload="auto"></audio>
 
   <script>
@@ -458,7 +477,7 @@
     const audioPlayer = document.getElementById("audio-player");
     let audioUnlocked = false;
 
-    // Desbloquear permisos de audio con el primer clic en la página
+    // Desbloquear audio con el primer clic
     document.addEventListener("click", () => {
       if (!audioUnlocked) {
         audioPlayer.play().then(() => {
@@ -484,7 +503,7 @@
           audioPlayer.src = item.audio;
           audioPlayer.currentTime = 0;
           audioPlayer.play().catch((err) => {
-            console.warn("Se requiere un clic en la página para habilitar el sonido:", err);
+            console.warn("Interacción requerida para audio:", err);
           });
         }
       }
@@ -508,7 +527,7 @@
       });
     });
 
-    // Interacción Rutas (Soporta Hover y Clic)
+    // Interacción Rutas
     document.querySelectorAll(".route").forEach(route => {
       route.addEventListener("mouseenter", () => {
         playRouteAudio(data[route.id], route);
@@ -523,7 +542,7 @@
       });
     });
 
-    // Toggle de capas
+    // Control de Capas
     function toggleLayer(view) {
       const zones = document.getElementById("layer-zones");
       const btnCorema = document.getElementById("btn-corema");
