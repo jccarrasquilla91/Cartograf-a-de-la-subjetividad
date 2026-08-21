@@ -14,6 +14,7 @@
       --c-work: #d81b60;
       --c-school: #283593;
       --c-park: #1b5e20;
+      --c-plaza: #f57f17;
     }
 
     * { box-sizing: border-box; }
@@ -73,7 +74,7 @@
       display: flex;
       flex-direction: row;
       gap: 20px;
-      width: 1200px;
+      width: 1220px;
       max-width: 100%;
     }
 
@@ -93,7 +94,6 @@
       height: 100%;
     }
 
-    /* Panel Lateral */
     #sidebar {
       width: 350px;
       display: flex;
@@ -136,8 +136,8 @@
     .tag-topofilia { background: #e8f5e9; color: #1b5e20; }
     .tag-topofobia { background: #ffebee; color: #c2185b; }
     .tag-neutro { background: #e3f2fd; color: #0d47a1; }
+    .tag-hito { background: #fff8e1; color: #f57f17; }
 
-    /* Guía de Uso Destacada */
     .interaction-guide {
       background: linear-gradient(135deg, #fffde7 0%, #fff9c4 100%);
       border-left: 4px solid #fbc02d;
@@ -166,7 +166,6 @@
       50% { opacity: 0.5; transform: scale(1.15); }
     }
 
-    /* Visor de Fotografía / Ilustración */
     .media-card {
       background: #ffffff;
       border-radius: 10px;
@@ -215,7 +214,6 @@
       font-style: italic;
     }
 
-    /* Entidades del Corema */
     .blob-urban { fill: #ffe0b2; opacity: 0.55; }
     .blob-warm { fill: #ffcc80; opacity: 0.65; }
     .blob-park { fill: #c8e6c9; opacity: 0.6; }
@@ -239,7 +237,6 @@
       opacity: 0.45;
     }
 
-    /* Rutas Vectoriales y Jerarquías */
     .route {
       fill: none;
       stroke-linecap: round;
@@ -318,9 +315,8 @@
 
   <div class="workspace">
     
-    <!-- Mapa SVG -->
     <div id="map-container">
-      <svg viewBox="0 0 820 660" id="svg-map">
+      <svg viewBox="0 0 840 660" id="svg-map">
         <defs>
           <pattern id="diagonal-hatch" width="10" height="10" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
             <line x1="0" y1="0" x2="0" y2="10" stroke="#ffb74d" stroke-width="1.5" />
@@ -330,16 +326,18 @@
           </pattern>
         </defs>
 
-        <!-- CAPA 1: MORFOLOGÍA ORGÁNICA Y RÍO -->
+        <!-- CAPA 1: ZONAS Y MORFOLOGÍA -->
         <g id="layer-zones">
-          <rect width="820" height="660" fill="url(#dot-grid)" opacity="0.7"/>
+          <rect width="840" height="660" fill="url(#dot-grid)" opacity="0.7"/>
 
           <!-- Manchas de Presión Urbana -->
-          <path class="blob-urban" d="M 80,180 C 140,110 260,100 370,120 C 460,135 500,210 470,280 C 440,330 320,340 210,320 C 110,300 50,240 80,180 Z" />
-          <path class="blob-warm" d="M 280,140 C 370,110 470,130 500,190 C 530,250 480,310 410,300 C 350,290 270,270 260,220 C 250,170 230,160 280,140 Z" />
-          <path class="hatch-pattern" d="M 290,145 C 380,125 460,140 480,195 C 500,245 460,295 400,285 C 340,275 280,255 275,210 Z" />
+          <path class="blob-urban" d="M 80,180 C 140,110 260,100 370,120 C 460,135 520,200 500,290 C 460,340 320,340 210,320 C 110,300 50,240 80,180 Z" />
+          <path class="blob-warm" d="M 280,140 C 370,110 490,130 520,190 C 550,250 510,320 430,315 C 360,300 270,270 260,220 C 250,170 230,160 280,140 Z" />
+          
+          <!-- Hachurado de saturación -->
+          <path class="hatch-pattern" d="M 290,145 C 380,125 475,140 495,195 C 515,245 480,300 410,295 C 340,285 280,255 275,210 Z" />
 
-          <!-- Zona del Parque y Lago -->
+          <!-- Zona del Parque y Lago Sur -->
           <path class="blob-park" d="M 330,500 C 370,440 500,430 600,480 C 690,520 670,610 570,625 C 470,640 370,620 330,570 C 300,530 300,540 330,500 Z" />
           <ellipse class="sensory-pulse" cx="510" cy="535" rx="140" ry="75" />
           <ellipse class="sensory-pulse" cx="510" cy="535" rx="180" ry="95" />
@@ -355,23 +353,23 @@
           <text x="330" y="80" fill="#00838f" font-size="11" font-weight="600" font-style="italic" transform="rotate(72, 330, 80)">Río / Eje Ambiental</text>
         </g>
 
-        <!-- CAPA 2: RUTAS JERARQUIZADAS -->
+        <!-- CAPA 2: RUTAS CONVERGENTES -->
         <g id="layer-routes">
-          <!-- 1. Trabajo (Magenta) -->
-          <path id="route-work" class="route route-work-main" stroke="var(--c-work)" d="M 100,300 L 260,300 L 380,260 L 460,260" />
-          <path id="route-work-ret" class="route route-return-thin" stroke="var(--c-work)" d="M 460,260 L 430,160 L 220,160 L 100,300" />
+          <!-- 1. Trabajo (Pasa cerca del Parque Alfonso López) -->
+          <path id="route-work" class="route route-work-main" stroke="var(--c-work)" d="M 100,300 L 260,300 L 370,285 L 450,295 L 530,240" />
+          <path id="route-work-ret" class="route route-return-thin" stroke="var(--c-work)" d="M 530,240 L 440,160 L 220,160 L 100,300" />
 
-          <!-- 2. Estudiante (Azul - Retorno Doble en Paralelo) -->
-          <path id="route-school" class="route route-school-main" stroke="var(--c-school)" d="M 100,300 L 240,315 L 430,340 L 680,390" />
-          <path id="route-school-ret" class="route route-school-double-1" d="M 680,388 L 620,178 L 300,138 L 100,298" />
-          <path id="route-school-ret-2" class="route route-school-double-2" d="M 680,394 L 624,184 L 302,144 L 100,304" />
+          <!-- 2. Estudiante (Bordea el Parque Alfonso López hacia el este) -->
+          <path id="route-school" class="route route-school-main" stroke="var(--c-school)" d="M 100,300 L 240,315 L 380,315 L 490,335 L 700,380" />
+          <path id="route-school-ret" class="route route-school-double-1" d="M 700,378 L 620,178 L 300,138 L 100,298" />
+          <path id="route-school-ret-2" class="route route-school-double-2" d="M 700,384 L 624,184 L 302,144 L 100,304" />
 
-          <!-- 3. Parque y Lago (Verde) -->
+          <!-- 3. Parque y Lago Sur -->
           <path id="route-park" class="route route-park-main" stroke="var(--c-park)" d="M 100,300 L 220,320 L 240,460 L 470,515" />
           <path id="route-park-ret" class="route route-return-thin" stroke="var(--c-park)" d="M 520,500 L 590,410 L 380,310 L 100,300" />
         </g>
 
-        <!-- CAPA 3: NODOS -->
+        <!-- CAPA 3: NODOS E HITOS -->
         <g id="layer-nodes">
           <!-- LA CASA -->
           <g id="node-house" class="node-interactive" transform="translate(100,300)">
@@ -381,15 +379,25 @@
             <text class="map-label" x="0" y="36" text-anchor="middle">La Casa</text>
           </g>
 
+          <!-- NUEVO HITO: PARQUE ALFONSO LÓPEZ (PARQUE DE LA IGLESIA) -->
+          <g id="node-plaza" class="node-interactive" transform="translate(470,320)">
+            <circle r="22" fill="#fff8e1" stroke="var(--c-plaza)" stroke-width="2.5"/>
+            <!-- Ícono central de iglesia/cúpula de plaza -->
+            <path d="M 0,-12 L 0,-6 M -3,-9 L 3,-9" stroke="var(--c-plaza)" stroke-width="1.8" stroke-linecap="round"/>
+            <polygon points="-8,4 0,-4 8,4" fill="none" stroke="var(--c-plaza)" stroke-width="1.8"/>
+            <rect x="-7" y="4" width="14" height="6" fill="var(--c-plaza)"/>
+            <text class="map-label" x="0" y="36" text-anchor="middle" fill="#b78103">Pque. Alfonso López</text>
+          </g>
+
           <!-- TRABAJO -->
-          <g id="node-work" class="node-interactive" transform="translate(460,260)">
+          <g id="node-work" class="node-interactive" transform="translate(530,240)">
             <rect x="-16" y="-16" width="32" height="32" rx="6" fill="var(--c-work)" stroke="#ffffff" stroke-width="2"/>
             <circle cx="0" cy="0" r="4" fill="#ffffff"/>
             <text class="map-label" x="0" y="32" text-anchor="middle">Trabajo</text>
           </g>
 
           <!-- ESTUDIANTE -->
-          <g id="node-student" class="node-interactive" transform="translate(680,390)">
+          <g id="node-student" class="node-interactive" transform="translate(700,380)">
             <circle r="19" fill="var(--c-school)" stroke="#ffffff" stroke-width="2.5"/>
             <circle cx="0" cy="-5" r="3.5" fill="#ffffff"/>
             <path d="M -6,7 C -6,0 6,0 6,7" fill="none" stroke="#ffffff" stroke-width="2"/>
@@ -407,14 +415,20 @@
 
         <!-- CAPA 4: LLAMADOS TEXTUALES -->
         <g id="layer-callouts">
-          <text class="map-callout" x="485" y="245">
-            <tspan x="485" dy="0" font-weight="bold">Ritmo acelerado</tspan>
-            <tspan x="485" dy="13">Cruce de vía principal</tspan>
+          <!-- Llamado Plaza/Iglesia -->
+          <text class="map-callout" x="460" y="380">
+            <tspan x="460" dy="0" font-weight="bold" fill="#b78103">Hito de convergencia</tspan>
+            <tspan x="460" dy="12">Parque de la Iglesia (Paso obligado)</tspan>
           </text>
 
-          <text class="map-callout" x="640" y="440">
-            <tspan x="640" dy="0" font-weight="bold">Espera y retorno conjunto</tspan>
-            <tspan x="640" dy="13">Caminata de dos personas (trazo doble)</tspan>
+          <text class="map-callout" x="555" y="225">
+            <tspan x="555" dy="0" font-weight="bold">Ritmo acelerado</tspan>
+            <tspan x="555" dy="12">Cruce de vía principal</tspan>
+          </text>
+
+          <text class="map-callout" x="655" y="435">
+            <tspan x="655" dy="0" font-weight="bold">Espera y retorno conjunto</tspan>
+            <tspan x="655" dy="12">Caminata de 2 personas</tspan>
           </text>
 
           <text class="map-callout" x="310" y="595">
@@ -442,16 +456,16 @@
         <p><strong>— Trazo Grueso:</strong> Rutas de ida (mayor velocidad).</p>
         <p><strong>- - Trazo Delgado:</strong> Retorno individual por vías secundarias.</p>
         <p><strong>= = Trazo Doble:</strong> Retorno acompañado (2 personas).</p>
+        <p><strong>📍 Nodo Amarillo:</strong> Hito central / Parque Alfonso López.</p>
         <p><strong>((( ))) Anillos:</strong> Zona de descompresión sensorial.</p>
         
-        <!-- GUÍA DESTACADA -->
         <div class="interaction-guide">
           <span class="icon">🔊</span>
           <p>Haz clic o pasa el cursor sobre las líneas para activar el paisaje sonoro.</p>
         </div>
       </div>
 
-      <!-- Tarjeta 3: Registro Visual / Fotografía (Reemplaza el recuadro rojo) -->
+      <!-- Tarjeta 3: Registro Visual / Fotografía -->
       <div class="media-card">
         <h4 id="media-title">Registro Visual del Lugar</h4>
         <div class="image-frame">
@@ -475,6 +489,14 @@
         desc: "Punto de partida y retorno. Espacio de máxima seguridad, calidez y resguardo personal.",
         img: "casa.jpg",
         caption: "Fachada y umbral de entrada al hogar"
+      },
+      "node-plaza": {
+        tag: "tag-hito",
+        tagName: "Hito / Rótula Urbana",
+        title: "Parque Alfonso López (Parque de la Iglesia)",
+        desc: "Hito central de convergencia diaria. Punto de referencia visual y espacial que articula casi todas las derivas hacia el trabajo y el colegio.",
+        img: "parque_iglesia.jpg",
+        caption: "Parque Alfonso López y templo parroquial"
       },
       "node-work": {
         tag: "tag-topofobia",
@@ -504,7 +526,7 @@
         tag: "tag-topofobia",
         tagName: "Paisaje Sonoro: Topofobia",
         title: "Ruta al Trabajo (Ida)",
-        desc: "Ruido de tráfico motorizado, aceleraciones y cruce apresurado del canal.",
+        desc: "Ruido de tráfico motorizado, aceleraciones y paso frente al hito central de la iglesia.",
         audio: "./Track-16.wav",
         img: "trabajo.jpg",
         caption: "Cruce vehicular y puente sobre el canal"
@@ -522,7 +544,7 @@
         tag: "tag-topofobia",
         tagName: "Paisaje Sonoro: Hora Pico",
         title: "Ruta hacia el Estudiante (Ida)",
-        desc: "Flujo vehicular constante y paso rápido en andenes estrechos.",
+        desc: "Flujo vehicular constante pasando junto al Parque Alfonso López hacia el oriente.",
         audio: "./Track-16.wav",
         img: "estudiante.jpg",
         caption: "Corredor comercial en hora pico"
@@ -573,7 +595,6 @@
     const audioPlayer = document.getElementById("audio-player");
     let audioUnlocked = false;
 
-    // Habilitar audio con primer clic
     document.addEventListener("click", () => {
       if (!audioUnlocked) {
         audioPlayer.play().then(() => {
@@ -617,20 +638,17 @@
       audioPlayer.pause();
     }
 
-    // Interacción Nodos
     document.querySelectorAll(".node-interactive").forEach(node => {
       node.addEventListener("mouseenter", () => updateContent(data[node.id]));
       node.addEventListener("click", () => updateContent(data[node.id]));
     });
 
-    // Interacción Rutas
     document.querySelectorAll(".route").forEach(route => {
       route.addEventListener("mouseenter", () => playRouteAudio(data[route.id], route));
       route.addEventListener("mouseleave", () => stopRouteAudio(route));
       route.addEventListener("click", () => playRouteAudio(data[route.id], route));
     });
 
-    // Conmutador de Capas
     function toggleLayer(view) {
       const zones = document.getElementById("layer-zones");
       const btnCorema = document.getElementById("btn-corema");
