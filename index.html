@@ -73,14 +73,14 @@
       display: flex;
       flex-direction: row;
       gap: 20px;
-      width: 1180px;
+      width: 1200px;
       max-width: 100%;
     }
 
     #map-container {
       position: relative;
       flex: 1;
-      height: 720px;
+      height: 750px;
       background: var(--paper);
       border-radius: 12px;
       box-shadow: 0 6px 24px rgba(0, 0, 0, 0.05);
@@ -95,15 +95,15 @@
 
     /* Panel Lateral */
     #sidebar {
-      width: 330px;
+      width: 350px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 14px;
     }
 
     .info-card {
       background: #ffffff;
-      padding: 20px;
+      padding: 16px 18px;
       border-radius: 10px;
       border: 1px solid #e1e4e8;
       box-shadow: 0 2px 8px rgba(0,0,0,0.03);
@@ -111,15 +111,15 @@
 
     .info-card h3 {
       margin: 0 0 8px 0;
-      font-size: 16px;
+      font-size: 15px;
       border-bottom: 2px solid #212529;
-      padding-bottom: 6px;
+      padding-bottom: 5px;
     }
 
     .info-card p {
-      margin: 0 0 10px 0;
-      font-size: 13px;
-      line-height: 1.5;
+      margin: 0 0 6px 0;
+      font-size: 12.5px;
+      line-height: 1.45;
       color: var(--muted);
     }
 
@@ -137,25 +137,89 @@
     .tag-topofobia { background: #ffebee; color: #c2185b; }
     .tag-neutro { background: #e3f2fd; color: #0d47a1; }
 
+    /* Guía de Uso Destacada */
+    .interaction-guide {
+      background: linear-gradient(135deg, #fffde7 0%, #fff9c4 100%);
+      border-left: 4px solid #fbc02d;
+      padding: 10px 12px;
+      border-radius: 6px;
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .interaction-guide span.icon {
+      font-size: 18px;
+      animation: sound-blink 1.5s infinite;
+    }
+
+    .interaction-guide p {
+      margin: 0;
+      font-size: 12px;
+      font-weight: 700;
+      color: #795548;
+    }
+
+    @keyframes sound-blink {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.15); }
+    }
+
+    /* Visor de Fotografía / Ilustración */
+    .media-card {
+      background: #ffffff;
+      border-radius: 10px;
+      border: 1px solid #e1e4e8;
+      padding: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .media-card h4 {
+      margin: 0 0 8px 0;
+      font-size: 13px;
+      width: 100%;
+      color: #333;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 4px;
+    }
+
+    .image-frame {
+      width: 100%;
+      height: 180px;
+      background: #f0f2f5;
+      border-radius: 6px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px dashed #cfd8dc;
+    }
+
+    .image-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: opacity 0.3s ease;
+    }
+
+    .image-caption {
+      margin-top: 6px;
+      font-size: 11px;
+      color: #78909c;
+      text-align: center;
+      font-style: italic;
+    }
+
     /* Entidades del Corema */
-    .blob-urban {
-      fill: #ffe0b2;
-      opacity: 0.55;
-    }
-
-    .blob-warm {
-      fill: #ffcc80;
-      opacity: 0.65;
-    }
-
-    .blob-park {
-      fill: #c8e6c9;
-      opacity: 0.6;
-    }
-
-    .hatch-pattern {
-      fill: url(#diagonal-hatch);
-    }
+    .blob-urban { fill: #ffe0b2; opacity: 0.55; }
+    .blob-warm { fill: #ffcc80; opacity: 0.65; }
+    .blob-park { fill: #c8e6c9; opacity: 0.6; }
+    .hatch-pattern { fill: url(#diagonal-hatch); }
 
     .river-path {
       fill: none;
@@ -218,7 +282,6 @@
       animation: pulse-wave 0.85s infinite ease-in-out;
     }
 
-    /* Nodos */
     .node-interactive {
       cursor: pointer;
     }
@@ -255,6 +318,7 @@
 
   <div class="workspace">
     
+    <!-- Mapa SVG -->
     <div id="map-container">
       <svg viewBox="0 0 820 660" id="svg-map">
         <defs>
@@ -266,60 +330,50 @@
           </pattern>
         </defs>
 
-        <!-- CAPA 1: MORFOLOGÍA ORGÁNICA Y RÍO SINUOSO -->
+        <!-- CAPA 1: MORFOLOGÍA ORGÁNICA Y RÍO -->
         <g id="layer-zones">
-          <!-- Fondo de Trama Ligera Urbana -->
           <rect width="820" height="660" fill="url(#dot-grid)" opacity="0.7"/>
 
-          <!-- Manchas Ameboides de Actividad Urbana (Inspiradas en Referentes) -->
+          <!-- Manchas de Presión Urbana -->
           <path class="blob-urban" d="M 80,180 C 140,110 260,100 370,120 C 460,135 500,210 470,280 C 440,330 320,340 210,320 C 110,300 50,240 80,180 Z" />
           <path class="blob-warm" d="M 280,140 C 370,110 470,130 500,190 C 530,250 480,310 410,300 C 350,290 270,270 260,220 C 250,170 230,160 280,140 Z" />
-          
-          <!-- Hachurado de saturación laboral / comercial -->
           <path class="hatch-pattern" d="M 290,145 C 380,125 460,140 480,195 C 500,245 460,295 400,285 C 340,275 280,255 275,210 Z" />
 
-          <!-- Mancha Verde Orgánica del Parque y Lago -->
+          <!-- Zona del Parque y Lago -->
           <path class="blob-park" d="M 330,500 C 370,440 500,430 600,480 C 690,520 670,610 570,625 C 470,640 370,620 330,570 C 300,530 300,540 330,500 Z" />
-
-          <!-- Halos concéntricos de desahogo sensorial y dispersión térmica -->
           <ellipse class="sensory-pulse" cx="510" cy="535" rx="140" ry="75" />
           <ellipse class="sensory-pulse" cx="510" cy="535" rx="180" ry="95" />
 
-          <!-- EJE HÍDRICO / RÍO SINUOSO (#48c9cf) -->
-          <!-- Ribera exterior suave -->
+          <!-- RÍO SINUOSO (#48c9cf) -->
           <path class="river-path river-edge" d="M 360,20 C 340,100 270,140 320,230 C 360,300 230,360 270,470 C 300,540 180,590 190,660" />
-          <!-- Cuerpo principal del río -->
           <path class="river-path river-body" d="M 360,20 C 340,100 270,140 320,230 C 360,300 230,360 270,470 C 300,540 180,590 190,660" />
-          <!-- Línea central de corriente -->
           <path class="river-path river-centerline" d="M 360,20 C 340,100 270,140 320,230 C 360,300 230,360 270,470 C 300,540 180,590 190,660" />
 
-          <!-- Lago esquemático conectado -->
+          <!-- Lago Conectado -->
           <ellipse cx="510" cy="535" rx="75" ry="38" fill="#48c9cf" opacity="0.8" />
           <path d="M 470,530 Q 510,515 550,530 M 480,545 Q 510,535 540,545" stroke="#ffffff" stroke-width="2" fill="none" opacity="0.9"/>
-
-          <text x="330" y="80" fill="#00838f" font-size="11" font-weight="600" font-style="italic" transform="rotate(72, 330, 80)">Río Subachoque</text>
+          <text x="330" y="80" fill="#00838f" font-size="11" font-weight="600" font-style="italic" transform="rotate(72, 330, 80)">Río / Eje Ambiental</text>
         </g>
 
-        <!-- CAPA 2: RUTAS CON JERARQUÍAS -->
+        <!-- CAPA 2: RUTAS JERARQUIZADAS -->
         <g id="layer-routes">
-          <!-- 1. Ruta Trabajo (Magenta) -->
+          <!-- 1. Trabajo (Magenta) -->
           <path id="route-work" class="route route-work-main" stroke="var(--c-work)" d="M 100,300 L 260,300 L 380,260 L 460,260" />
           <path id="route-work-ret" class="route route-return-thin" stroke="var(--c-work)" d="M 460,260 L 430,160 L 220,160 L 100,300" />
 
-          <!-- 2. Ruta Estudiante (Azul - Retorno Doble en Paralelo) -->
+          <!-- 2. Estudiante (Azul - Retorno Doble en Paralelo) -->
           <path id="route-school" class="route route-school-main" stroke="var(--c-school)" d="M 100,300 L 240,315 L 430,340 L 680,390" />
           <path id="route-school-ret" class="route route-school-double-1" d="M 680,388 L 620,178 L 300,138 L 100,298" />
           <path id="route-school-ret-2" class="route route-school-double-2" d="M 680,394 L 624,184 L 302,144 L 100,304" />
 
-          <!-- 3. Ruta Parque y Lago (Verde) -->
+          <!-- 3. Parque y Lago (Verde) -->
           <path id="route-park" class="route route-park-main" stroke="var(--c-park)" d="M 100,300 L 220,320 L 240,460 L 470,515" />
           <path id="route-park-ret" class="route route-return-thin" stroke="var(--c-park)" d="M 520,500 L 590,410 L 380,310 L 100,300" />
         </g>
 
-        <!-- CAPA 3: NODOS EDITORIALES ESTABLES -->
+        <!-- CAPA 3: NODOS -->
         <g id="layer-nodes">
-          
-          <!-- HOGAR / LA CASA -->
+          <!-- LA CASA -->
           <g id="node-house" class="node-interactive" transform="translate(100,300)">
             <circle r="22" fill="#ffffff" stroke="#1b1f23" stroke-width="2.5"/>
             <path d="M -9,4 L -9,-2 L 0,-9 L 9,-2 L 9,4 Z" fill="#1b1f23"/>
@@ -351,7 +405,7 @@
           </g>
         </g>
 
-        <!-- CAPA 4: LLAMADOS Y TEXTOS CONCEPTUALES -->
+        <!-- CAPA 4: LLAMADOS TEXTUALES -->
         <g id="layer-callouts">
           <text class="map-callout" x="485" y="245">
             <tspan x="485" dy="0" font-weight="bold">Ritmo acelerado</tspan>
@@ -374,20 +428,38 @@
 
     <!-- PANEL LATERAL -->
     <div id="sidebar">
+      
+      <!-- Tarjeta 1: Información Textual -->
       <div class="info-card">
         <span id="info-tag" class="tag tag-neutro">Punto de Origen</span>
         <h3 id="info-title">La Casa</h3>
         <p id="info-desc">Nodo central de reposo, seguridad y preparación. Punto cero desde el cual se estructuran todas las vivencias del día a día.</p>
       </div>
 
+      <!-- Tarjeta 2: Convenciones y Guía Resaltada -->
       <div class="info-card">
         <h3>Jerarquía de Convenciones</h3>
-        <p style="margin-bottom:6px;"><strong>— Trazo Grueso:</strong> Rutas de ida (mayor velocidad y carga funcional).</p>
-        <p style="margin-bottom:6px;"><strong>- - Trazo Delgado:</strong> Retorno individual por vías secundarias.</p>
-        <p style="margin-bottom:6px;"><strong>= = Trazo Doble:</strong> Retorno acompañado (dos personas acompasadas).</p>
-        <p style="margin-bottom:6px;"><strong>((( ))) Anillos Concéntricos:</strong> Zona de descompresión y desahogo sensorial.</p>
-        <p style="margin-bottom:0;"><strong>Haz clic o pasa el cursor</strong> sobre las líneas para activar el paisaje sonoro.</p>
+        <p><strong>— Trazo Grueso:</strong> Rutas de ida (mayor velocidad).</p>
+        <p><strong>- - Trazo Delgado:</strong> Retorno individual por vías secundarias.</p>
+        <p><strong>= = Trazo Doble:</strong> Retorno acompañado (2 personas).</p>
+        <p><strong>((( ))) Anillos:</strong> Zona de descompresión sensorial.</p>
+        
+        <!-- GUÍA DESTACADA -->
+        <div class="interaction-guide">
+          <span class="icon">🔊</span>
+          <p>Haz clic o pasa el cursor sobre las líneas para activar el paisaje sonoro.</p>
+        </div>
       </div>
+
+      <!-- Tarjeta 3: Registro Visual / Fotografía (Reemplaza el recuadro rojo) -->
+      <div class="media-card">
+        <h4 id="media-title">Registro Visual del Lugar</h4>
+        <div class="image-frame">
+          <img id="media-img" src="casa.jpg" alt="Registro visual del nodo" onerror="this.src='https://images.unsplash.com/photo-1513694203232-719a280e022f?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3';">
+        </div>
+        <div id="media-caption" class="image-caption">Espacio doméstico y punto de partida</div>
+      </div>
+
     </div>
 
   </div>
@@ -400,84 +472,108 @@
         tag: "tag-neutro",
         tagName: "Origen / Refugio",
         title: "La Casa",
-        desc: "Punto de partida y retorno. Espacio de máxima seguridad, calidez y resguardo personal."
+        desc: "Punto de partida y retorno. Espacio de máxima seguridad, calidez y resguardo personal.",
+        img: "casa.jpg",
+        caption: "Fachada y umbral de entrada al hogar"
       },
       "node-work": {
         tag: "tag-topofobia",
         tagName: "Demanda / Trabajo",
         title: "Nodo Laboral",
-        desc: "Espacio de concentración y deber. El cuerpo experimenta una aceleración del pulso y ritmo antes del retorno."
+        desc: "Espacio de concentración y deber. El cuerpo experimenta una aceleración del pulso y ritmo antes del retorno.",
+        img: "trabajo.jpg",
+        caption: "Entorno laboral y concentración urbana"
       },
       "node-student": {
         tag: "tag-neutro",
         tagName: "Encuentro Vespertino",
         title: "Punto de Recogida del Estudiante",
-        desc: "Nodo de pausa y encuentro que da inicio al retorno compartido a paso conversado."
+        desc: "Nodo de pausa y encuentro que da inicio al retorno compartido a paso conversado.",
+        img: "estudiante.jpg",
+        caption: "Andén de espera escolar en la tarde"
       },
       "node-park": {
         tag: "tag-topofilia",
         tagName: "Topofilia Pura",
         title: "El Parque y el Lago",
-        desc: "Desahogo sensorial. El horizonte visual se abre, la temperatura desciende por el agua y el cuerpo reduce la marcha de forma voluntaria."
+        desc: "Desahogo sensorial. El horizonte visual se abre, la temperatura desciende por el agua y el cuerpo reduce la marcha de forma voluntaria.",
+        img: "parque.jpg",
+        caption: "Espejo de agua y vegetación de descompresión"
       },
       "route-work": {
         tag: "tag-topofobia",
         tagName: "Paisaje Sonoro: Topofobia",
         title: "Ruta al Trabajo (Ida)",
         desc: "Ruido de tráfico motorizado, aceleraciones y cruce apresurado del canal.",
-        audio: "./Track-17.wav"
+        audio: "./Track-16.wav",
+        img: "trabajo.jpg",
+        caption: "Cruce vehicular y puente sobre el canal"
       },
       "route-work-ret": {
         tag: "tag-neutro",
         tagName: "Paisaje Sonoro: Retorno",
         title: "Retorno del Trabajo",
         desc: "Desvío por manzanas secundarias buscando evadir el corredor saturado.",
-        audio: "./Track-18.wav"
+        audio: "./Track-16.wav",
+        img: "casa.jpg",
+        caption: "Calles intermedias de retorno"
       },
       "route-school": {
         tag: "tag-topofobia",
         tagName: "Paisaje Sonoro: Hora Pico",
         title: "Ruta hacia el Estudiante (Ida)",
         desc: "Flujo vehicular constante y paso rápido en andenes estrechos.",
-        audio: "./Track-20.wav"
+        audio: "./Track-16.wav",
+        img: "estudiante.jpg",
+        caption: "Corredor comercial en hora pico"
       },
       "route-school-ret": {
         tag: "tag-neutro",
         tagName: "Paisaje Sonoro: Retorno Doble",
         title: "Retorno Compartido (2 Personas)",
         desc: "Caminata acompañada por la ladera norte. La conversación amortigua el rumor vehicular.",
-        audio: "./Track-21.wav"
+        audio: "./Track-16.wav",
+        img: "estudiante.jpg",
+        caption: "Paso acompasado de dos personas"
       },
       "route-school-ret-2": {
         tag: "tag-neutro",
         tagName: "Paisaje Sonoro: Retorno Doble",
         title: "Retorno Compartido (2 Personas)",
         desc: "Caminata acompañada por la ladera norte. La conversación amortigua el rumor vehicular.",
-        audio: "./Track-22.wav"
+        audio: "./Track-16.wav",
+        img: "estudiante.jpg",
+        caption: "Paso acompasado de dos personas"
       },
       "route-park": {
         tag: "tag-topofilia",
         tagName: "Paisaje Sonoro: Topofilia",
         title: "Ruta al Parque y Lago",
         desc: "Transición acústica: atenuación de motores y emergencia del rumor de agua, viento y aves.",
-        audio: "./Track-23.wav"
+        audio: "./Track-16.wav",
+        img: "parque.jpg",
+        caption: "Sendero verde hacia el lago"
       },
       "route-park-ret": {
         tag: "tag-topofilia",
         tagName: "Paisaje Sonoro: Retorno en Calma",
         title: "Retorno desde el Lago",
         desc: "Sensación de bienestar acumulado tras la pausa verde.",
-        audio: "./Track-16.wav"
+        audio: "./Track-16.wav",
+        img: "parque.jpg",
+        caption: "Pausa sensorial final"
       }
     };
 
     const titleEl = document.getElementById("info-title");
     const descEl = document.getElementById("info-desc");
     const tagEl = document.getElementById("info-tag");
+    const imgEl = document.getElementById("media-img");
+    const captionEl = document.getElementById("media-caption");
     const audioPlayer = document.getElementById("audio-player");
     let audioUnlocked = false;
 
-    // Desbloquear audio con el primer clic
+    // Habilitar audio con primer clic
     document.addEventListener("click", () => {
       if (!audioUnlocked) {
         audioPlayer.play().then(() => {
@@ -490,22 +586,29 @@
       }
     }, { once: true });
 
+    function updateContent(item) {
+      if (!item) return;
+      titleEl.textContent = item.title;
+      descEl.textContent = item.desc;
+      tagEl.className = `tag ${item.tag}`;
+      tagEl.textContent = item.tagName;
+
+      if (item.img) {
+        imgEl.src = item.img;
+      }
+      if (item.caption) {
+        captionEl.textContent = item.caption;
+      }
+    }
+
     function playRouteAudio(item, routeElement) {
-      if (item) {
-        titleEl.textContent = item.title;
-        descEl.textContent = item.desc;
-        tagEl.className = `tag ${item.tag}`;
-        tagEl.textContent = item.tagName;
+      updateContent(item);
+      routeElement.classList.add("playing-sound");
 
-        routeElement.classList.add("playing-sound");
-
-        if (item.audio) {
-          audioPlayer.src = item.audio;
-          audioPlayer.currentTime = 0;
-          audioPlayer.play().catch((err) => {
-            console.warn("Interacción requerida para audio:", err);
-          });
-        }
+      if (item && item.audio) {
+        audioPlayer.src = item.audio;
+        audioPlayer.currentTime = 0;
+        audioPlayer.play().catch(() => {});
       }
     }
 
@@ -516,33 +619,18 @@
 
     // Interacción Nodos
     document.querySelectorAll(".node-interactive").forEach(node => {
-      node.addEventListener("mouseenter", () => {
-        const item = data[node.id];
-        if (item) {
-          titleEl.textContent = item.title;
-          descEl.textContent = item.desc;
-          tagEl.className = `tag ${item.tag}`;
-          tagEl.textContent = item.tagName;
-        }
-      });
+      node.addEventListener("mouseenter", () => updateContent(data[node.id]));
+      node.addEventListener("click", () => updateContent(data[node.id]));
     });
 
     // Interacción Rutas
     document.querySelectorAll(".route").forEach(route => {
-      route.addEventListener("mouseenter", () => {
-        playRouteAudio(data[route.id], route);
-      });
-
-      route.addEventListener("mouseleave", () => {
-        stopRouteAudio(route);
-      });
-
-      route.addEventListener("click", () => {
-        playRouteAudio(data[route.id], route);
-      });
+      route.addEventListener("mouseenter", () => playRouteAudio(data[route.id], route));
+      route.addEventListener("mouseleave", () => stopRouteAudio(route));
+      route.addEventListener("click", () => playRouteAudio(data[route.id], route));
     });
 
-    // Control de Capas
+    // Conmutador de Capas
     function toggleLayer(view) {
       const zones = document.getElementById("layer-zones");
       const btnCorema = document.getElementById("btn-corema");
